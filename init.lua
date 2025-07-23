@@ -166,6 +166,10 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+vim.o.tabstop = 4
+vim.o.softtabstop = 4 --my changes
+vim.o.shiftwidth = 4 --my changes
+vim.o.expandtab = false --my changes
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -190,6 +194,10 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>') --my changes
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>') --my changes
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>') --my changes
 
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode with jk' }) --my changes
+vim.keymap.set('i', 'kj', '<Esc>', { desc = 'Exit insert mode with kj' })
+vim.keymap.set('n', '<leader>tt', '<cmd>exe v:count1 . "ToggleTerm"<CR>', { desc = 'Toggle terminal' })
+vim.keymap.set('t', '<leader>tt', '<cmd>exe v:count1 . "ToggleTerm"<CR>', { desc = 'Toggle terminal' }) --my changes
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -803,12 +811,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          { --my changes
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          }, --my changes
         },
         opts = {},
       },
@@ -854,7 +862,7 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 }, --my changes
       },
 
       sources = {
@@ -1018,4 +1026,4 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-require('lspconfig').racket_langserver.setup {}
+require('lspconfig').racket_langserver.setup {} --my changes

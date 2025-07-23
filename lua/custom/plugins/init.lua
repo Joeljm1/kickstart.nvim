@@ -62,4 +62,14 @@ return {
       { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = true,
+  },
+  {
+    'chentoast/marks.nvim',
+    event = 'VeryLazy',
+    opts = {},
+  },
 }
