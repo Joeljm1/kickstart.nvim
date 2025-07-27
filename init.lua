@@ -811,14 +811,18 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          { --my changes
-            'rafamadriz/friendly-snippets',
-            config = function()
-              require('luasnip.loaders.from_vscode').lazy_load()
-            end,
-          }, --my changes
+          -- { --my changes
+          --   'rafamadriz/friendly-snippets',
+          --   config = function()
+          --     require('luasnip.loaders.from_vscode').lazy_load()
+          --   end,
+          -- }, --my changes
         },
-        opts = {},
+        opts = {
+          history = true,
+          region_check_events = 'InsertEnter',
+          delete_check_events = 'TextChanged,InsertLeave',
+        },
       },
       'folke/lazydev.nvim',
     },
@@ -1027,3 +1031,17 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 require('lspconfig').racket_langserver.setup {} --my changes
+function leave_snippet()
+  if
+    ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+    and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+    and not require('luasnip').session.jump_active
+  then
+    require('luasnip').unlink_current()
+  end
+end
+
+-- stop snippets when you leave to normal mode
+vim.api.nvim_command [[
+    autocmd ModeChanged * lua leave_snippet()
+]] --my changes
