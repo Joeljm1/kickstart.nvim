@@ -167,8 +167,8 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 
 vim.o.tabstop = 4
-vim.o.softtabstop = 4 --my changes
-vim.o.shiftwidth = 4 --my changes
+vim.o.softtabstop = 2 --my changes
+vim.o.shiftwidth = 2 --my changes
 vim.o.expandtab = false --my changes
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -196,8 +196,8 @@ vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>') --my changes
 
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode with jk' }) --my changes
 vim.keymap.set('i', 'kj', '<Esc>', { desc = 'Exit insert mode with kj' })
-vim.keymap.set('n', '<leader>tt', '<cmd>exe v:count1 . "ToggleTerm"<CR>', { desc = 'Toggle terminal' })
-vim.keymap.set('t', '<leader>tt', '<cmd>exe v:count1 . "ToggleTerm"<CR>', { desc = 'Toggle terminal' }) --my changes
+vim.keymap.set('n', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm"<CR>', { desc = 'Toggle terminal' })
+vim.keymap.set('t', '<C-t>', '<cmd>exe v:count1 . "ToggleTerm"<CR>', { desc = 'Toggle terminal' }) --my changes
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -682,6 +682,18 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 
       local servers = {
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'off', -- or "off"
+              },
+            },
+          },
+        },
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -784,7 +796,14 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        -- my changes
+        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        yaml = { 'actionlint' },
+        python = { 'black' },
+        -- my changes
       },
     },
   },
@@ -1045,3 +1064,18 @@ end
 vim.api.nvim_command [[
     autocmd ModeChanged * lua leave_snippet()
 ]] --my changes
+
+-- hover error showing
+vim.diagnostic.config { --my changes
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  float = { show_header = false, source = 'always' },
+}
+
+-- Show diagnostic popup only when cursor is on a line (after holding for a bit)
+vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
+vim.keymap.set('n', 'K', function()
+  vim.lsp.buf.hover { border = 'rounded' }
+end, { noremap = true, silent = true }) --my changes
