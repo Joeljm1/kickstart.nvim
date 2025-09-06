@@ -1065,7 +1065,6 @@ vim.api.nvim_command [[
     autocmd ModeChanged * lua leave_snippet()
 ]] --my changes
 
--- hover error showing
 vim.diagnostic.config { --my changes
   virtual_text = false,
   signs = true,
