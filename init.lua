@@ -1078,3 +1078,15 @@ vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
 vim.keymap.set('n', 'K', function()
   vim.lsp.buf.hover { border = 'rounded' }
 end, { noremap = true, silent = true }) --my changes
+
+vim.filetype.add {
+  extension = {
+    ['http'] = 'http',
+  },
+}
+
+vim.filetype.add {
+  extension = {
+    ['http'] = 'http',
+  },
+}
