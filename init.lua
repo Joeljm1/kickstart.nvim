@@ -169,7 +169,7 @@ vim.o.confirm = true
 vim.o.tabstop = 4
 vim.o.softtabstop = 2 --my changes
 vim.o.shiftwidth = 2 --my changes
-vim.o.expandtab = false --my changes
+vim.o.expandtab = true --my changes
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -191,8 +191,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- TIP: Disable arrow keys in normal mode
 vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>') --my changes
 vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>') --my changes
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>') --my changes
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>') --my changes
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>') --my changes vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>') --my changes
 
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode with jk' }) --my changes
 vim.keymap.set('i', 'kj', '<Esc>', { desc = 'Exit insert mode with kj' })
@@ -214,6 +213,9 @@ vim.keymap.set('n', '<A-k>', '<cmd>cprev<CR>', { desc = 'prev in quicklist' })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+vim.keymap.set('n', 'L', '<cmd>tabnext<CR>', { desc = 'next tab' })
+vim.keymap.set('n', 'H', '<cmd>tabprev<CR>', { desc = 'prev tab' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -360,7 +362,6 @@ require('lazy').setup({
       },
     },
   },
-
   -- NOTE: Plugins can specify dependencies.
   --
   -- The dependencies are proper plugin specifications as well - anything
@@ -803,6 +804,7 @@ require('lazy').setup({
         typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
         yaml = { 'actionlint' },
         python = { 'black' },
+        go = { 'goimports' },
         -- my changes
       },
     },
@@ -1019,6 +1021,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
+
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1090,3 +1093,31 @@ vim.filetype.add {
     ['http'] = 'http',
   },
 }
+
+-- enable prolog in tree sitter
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = '*.pro',
+  command = 'set filetype=prolog',
+})
+
+-- Restore cursor to file position in previous editing session
+vim.api.nvim_create_autocmd('BufReadPost', {
+  callback = function(args)
+    local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+    local line_count = vim.api.nvim_buf_line_count(args.buf)
+    if mark[1] > 0 and mark[1] <= line_count then
+      vim.cmd 'normal! g`"zz'
+    end
+  end,
+})
+
+-- root of folder is the folder with .git directory
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    local util = require 'lspconfig.util'
+    local root = util.root_pattern '.git'(vim.fn.expand '%:p')
+    if root then
+      vim.fn.chdir(root)
+    end
+  end,
+})
