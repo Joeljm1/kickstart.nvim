@@ -61,6 +61,15 @@ return {
           vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
         end
 
+        -- make directory acc to lspconfig root dir
+        local function lspRoot()
+          local bufnr = vim.api.nvim_get_current_buf()
+          local dir = vim.lsp.get_clients({ bufnr = bufnr })[1].root_dir
+          if dir ~= nil then
+            vim.fn.chdir(dir)
+          end
+        end
+        lspRoot()
         -- Rename the variable under your cursor.
         --  Most Language Servers support renaming across files, etc.
         map('grn', vim.lsp.buf.rename, '[R]e[n]ame')

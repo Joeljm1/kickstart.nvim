@@ -474,6 +474,7 @@ require('lazy').setup({
   },
 
   -- LSP Plugins
+  { import = 'custom.plugins.lsp' },
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
@@ -748,7 +749,6 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
-  { import = 'custom.plugins.lsp' },
 
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
@@ -838,17 +838,6 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     local line_count = vim.api.nvim_buf_line_count(args.buf)
     if mark[1] > 0 and mark[1] <= line_count then
       vim.cmd 'normal! g`"zz'
-    end
-  end,
-})
-
--- root of folder is the folder with .git directory
-vim.api.nvim_create_autocmd('BufEnter', {
-  callback = function()
-    local util = require 'lspconfig.util'
-    local root = util.root_pattern '.git'(vim.fn.expand '%:p')
-    if root then
-      vim.fn.chdir(root)
     end
   end,
 })
