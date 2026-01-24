@@ -305,4 +305,223 @@ return {
       end,
     },
   },
+  {
+    'kawre/leetcode.nvim',
+    build = ':TSUpdate html', -- if you have `nvim-treesitter` installed
+    dependencies = {
+      -- include a picker of your choice, see picker section for more details
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      {
+        '3rd/image.nvim',
+        build = false, -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
+        opts = {
+          processor = 'magick_cli',
+        },
+      },
+    },
+    opts = {
+      -- configuration goes here
+      ---@type string
+      arg = 'leetcode.nvim',
+
+      ---@type lc.lang
+      lang = 'cpp',
+
+      cn = { -- leetcode.cn
+        enabled = false, ---@type boolean
+        translator = true, ---@type boolean
+        translate_problems = true, ---@type boolean
+      },
+
+      ---@type lc.storage
+      storage = {
+        home = vim.fn.stdpath 'data' .. '/leetcode',
+        cache = vim.fn.stdpath 'cache' .. '/leetcode',
+      },
+
+      ---@type table<string, boolean>
+      plugins = {
+        non_standalone = false,
+      },
+
+      ---@type boolean
+      logging = true,
+
+      injector = {}, ---@type table<lc.lang, lc.inject>
+
+      cache = {
+        update_interval = 60 * 60 * 24 * 7, ---@type integer 7 days
+      },
+
+      editor = {
+        reset_previous_code = true, ---@type boolean
+        fold_imports = true, ---@type boolean
+      },
+
+      console = {
+        open_on_runcode = true, ---@type boolean
+
+        dir = 'row', ---@type lc.direction
+
+        size = { ---@type lc.size
+          width = '90%',
+          height = '75%',
+        },
+
+        result = {
+          size = '60%', ---@type lc.size
+        },
+
+        testcase = {
+          virt_text = true, ---@type boolean
+
+          size = '40%', ---@type lc.size
+        },
+      },
+
+      description = {
+        position = 'left', ---@type lc.position
+
+        width = '40%', ---@type lc.size
+
+        show_stats = true, ---@type boolean
+      },
+
+      ---@type lc.picker
+      picker = { provider = nil },
+
+      hooks = {
+        ---@type fun()[]
+        ['enter'] = {},
+
+        ---@type fun(question: lc.ui.Question)[]
+        ['question_enter'] = {},
+
+        ---@type fun()[]
+        ['leave'] = {},
+      },
+
+      keys = {
+        toggle = { 'q' }, ---@type string|string[]
+        confirm = { '<CR>' }, ---@type string|string[]
+
+        reset_testcases = 'r', ---@type string
+        use_testcase = 'U', ---@type string
+        focus_testcases = 'H', ---@type string
+        focus_result = 'L', ---@type string
+      },
+
+      ---@type lc.highlights
+      theme = {},
+
+      ---@type boolean
+      image_support = false,
+    },
+  },
+  {
+    'mikesmithgh/kitty-scrollback.nvim',
+    enabled = true,
+    lazy = true,
+    cmd = {
+      'KittyScrollbackGenerateKittens',
+      'KittyScrollbackCheckHealth',
+      'KittyScrollbackGenerateCommandLineEditing',
+    },
+    event = { 'User KittyScrollbackLaunch' },
+    -- version = '*', -- latest stable version, may have breaking changes if major version changed
+    -- version = '^6.0.0', -- pin major version, include fixes and features that do not have breaking changes
+    config = function()
+      require('kitty-scrollback').setup()
+    end,
+  },
+  {
+    'mikavilpas/yazi.nvim',
+    version = '*', -- use the latest stable version
+    event = 'VeryLazy',
+    dependencies = {
+      { 'nvim-lua/plenary.nvim', lazy = true },
+    },
+    keys = {
+      -- 👇 in this section, choose your own keymappings!
+      {
+        '<leader>-',
+        mode = { 'n', 'v' },
+        '<cmd>Yazi<cr>',
+        desc = 'Open yazi at the current file',
+      },
+      {
+        -- Open in the current working directory
+        '<leader>cw',
+        '<cmd>Yazi cwd<cr>',
+        desc = "Open the file manager in nvim's working directory",
+      },
+      {
+        '<c-up>',
+        '<cmd>Yazi toggle<cr>',
+        desc = 'Resume the last yazi session',
+      },
+    },
+    opts = {
+      -- if you want to open yazi instead of netrw, see below for more info
+      open_for_directories = false,
+      keymaps = {
+        show_help = '<f1>',
+      },
+    },
+    -- 👇 if you use `open_for_directories=true`, this is recommended
+    init = function()
+      -- mark netrw as loaded so it's not loaded at all.
+      --
+      -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
+      vim.g.loaded_netrwPlugin = 1
+    end,
+  },
+  {
+    'R-nvim/R.nvim',
+    -- Only required if you also set defaults.lazy = true
+    lazy = false,
+    -- R.nvim is still young and we may make some breaking changes from time
+    -- to time (but also bug fixes all the time). If configuration stability
+    -- is a high priority for you, pin to the latest minor version, but unpin
+    -- it and try the latest version before reporting an issue:
+    -- version = "~0.1.0"
+    config = function()
+      -- Create a table with the options to be passed to setup()
+      ---@type RConfigUserOpts
+      local opts = {
+        hook = {
+          on_filetype = function()
+            vim.api.nvim_buf_set_keymap(0, 'n', '<Enter>', '<Plug>RDSendLine', {})
+            vim.api.nvim_buf_set_keymap(0, 'v', '<Enter>', '<Plug>RSendSelection', {})
+          end,
+        },
+        R_args = { '--quiet', '--no-save' },
+        min_editor_width = 72,
+        rconsole_width = 78,
+        objbr_mappings = { -- Object browser keymap
+          c = 'class', -- Call R functions
+          ['<localleader>gg'] = 'head({object}, n = 15)', -- Use {object} notation to write arbitrary R code.
+          v = function()
+            -- Run lua functions
+            require('r.browser').toggle_view()
+          end,
+        },
+        disable_cmds = {
+          'RClearConsole',
+          'RCustomStart',
+          'RSPlot',
+          'RSaveClose',
+        },
+      }
+      -- Check if the environment variable "R_AUTO_START" exists.
+      -- If using fish shell, you could put in your config.fish:
+      -- alias r "R_AUTO_START=true nvim"
+      if vim.env.R_AUTO_START == 'true' then
+        opts.auto_start = 'on startup'
+        opts.objbr_auto_start = true
+      end
+      require('r').setup(opts)
+    end,
+  },
 }

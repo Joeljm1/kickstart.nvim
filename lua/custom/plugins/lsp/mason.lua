@@ -64,7 +64,7 @@ return {
         -- make directory acc to lspconfig root dir
         local function lspRoot()
           local bufnr = vim.api.nvim_get_current_buf()
-          local dir = vim.lsp.get_clients({ bufnr = bufnr })[1].root_dir
+          local dir = vim.lsp.get_clients({ bufnr = bufnr })[1].root_dir -- TODO: check nill errors from here
           if dir ~= nil then
             vim.fn.chdir(dir)
           end

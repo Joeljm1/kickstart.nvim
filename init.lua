@@ -110,6 +110,17 @@ vim.o.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
 
+-- code folding
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
+-- Optional: Start with all folds open
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+
+-- Optional: Prevent folding at the very start of a file
+vim.opt.foldenable = false
+
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -826,10 +837,10 @@ vim.filetype.add {
 }
 
 -- enable prolog in tree sitter
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = '*.pro',
-  command = 'set filetype=prolog',
-})
+-- vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+--   pattern = '*.pro',
+--   command = 'set filetype=prolog',
+-- })
 
 -- Restore cursor to file position in previous editing session
 vim.api.nvim_create_autocmd('BufReadPost', {
@@ -841,3 +852,22 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end
   end,
 })
+
+-- vim.api.nvim_create_autocmd('BufEnter', {
+--   callback = function()
+--     vim.api.nvim_buf_attach(0, false, {
+--       on_lines = function(lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits)
+--         local args = { lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits }
+--         -- Using 'vim.schedule' ensures the print happens
+--         -- safely during the next event loop cycle
+--         vim.schedule(function()
+--           print('MODIFIED: ' .. vim.inspect(args))
+--
+--           -- vim.api.nvim_open_win(0, false, { relative = 'win', row = 3, col = 3, width = 12, height = 3 })
+--
+--           -- vim.api.nvim_open_win(0, false, { relative = 'cursor', width = 10, height = 10, bufpos = { 100, 10 } })
+--         end)
+--       end,
+--     })
+--   end,
+-- })
