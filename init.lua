@@ -202,7 +202,8 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- TIP: Disable arrow keys in normal mode
 vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>') --my changes
 vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>') --my changes
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>') --my changes vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>') --my changes
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>') --my changes
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>') --my changes
 
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode with jk' }) --my changes
 vim.keymap.set('i', 'kj', '<Esc>', { desc = 'Exit insert mode with kj' })
@@ -626,7 +627,10 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = true, auto_show_delay_ms = 500 }, --my changes
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
+        menu = { --my changes
+          auto_show = false,
+        }, --my changes
       },
 
       sources = {
@@ -729,7 +733,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby', 'odin', 'javascript', 'typescript' } },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -805,10 +809,11 @@ function leave_snippet()
   end
 end
 
+-- this causes snippets tab to not work
 -- stop snippets when you leave to normal mode
-vim.api.nvim_command [[
-    autocmd ModeChanged * lua leave_snippet()
-]] --my changes
+-- vim.api.nvim_command [[
+--     autocmd ModeChanged * lua leave_snippet()
+-- ]] --my changes
 
 vim.diagnostic.config { --my changes
   virtual_text = false,
@@ -853,21 +858,49 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
--- vim.api.nvim_create_autocmd('BufEnter', {
---   callback = function()
---     vim.api.nvim_buf_attach(0, false, {
---       on_lines = function(lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits)
---         local args = { lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits }
---         -- Using 'vim.schedule' ensures the print happens
---         -- safely during the next event loop cycle
---         vim.schedule(function()
---           print('MODIFIED: ' .. vim.inspect(args))
---
---           -- vim.api.nvim_open_win(0, false, { relative = 'win', row = 3, col = 3, width = 12, height = 3 })
---
---           -- vim.api.nvim_open_win(0, false, { relative = 'cursor', width = 10, height = 10, bufpos = { 100, 10 } })
---         end)
---       end,
---     })
---   end,
--- })
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    vim.api.nvim_buf_attach(0, false, {
+      on_lines = function(lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits)
+        local args = { lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits }
+        -- Using 'vim.schedule' ensures the print happens
+        -- safely during the next event loop cycle
+        vim.schedule(function()
+          print('MODIFIED: ' .. vim.inspect(args))
+
+          vim.api.nvim_open_win(0, false, { relative = 'win', row = 3, col = 3, width = 12, height = 3 })
+
+          -- vim.api.nvim_open_win(0, false, { relative = 'cursor', width = 10, height = 10, bufpos = { 100, 10 } })
+        end)
+      end,
+    })
+  end,
+})
+
+local minimal = true
+
+if minimal then
+  -- === Colorscheme ===
+  local palette = {
+    ['yellow'] = '#F6C177',
+    ['red'] = '#EB6F92',
+    ['blue'] = '#9CCFD8',
+    ['text_dark'] = '#777777',
+  }
+
+
+-- stylua: ignore start
+vim.cmd.colorscheme("quiet")
+vim.api.nvim_set_hl(0, "Comment",     { fg = palette["text_dark"] })
+vim.api.nvim_set_hl(0, "String",      { fg = palette["yellow"]    })
+vim.api.nvim_set_hl(0, "Directory",   { fg = palette["blue"]      })
+vim.api.nvim_set_hl(0, "Visual",      { bg = "#333333",           })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#0A0A0A"            })
+vim.api.nvim_set_hl(0, "StatusLine",  { bg = "#111111"            })
+vim.api.nvim_set_hl(0, "StatusLine",  { bg = "#111111"            })
+vim.api.nvim_set_hl(0, "TODO",        { fg = palette["red"]       })
+vim.api.nvim_set_hl(0, "YankSystemClipboard", { bg = "#0000FF", fg = "#000000" })
+
+vim.api.nvim_set_hl(0, "rustCommentLineDoc",          { link = "Comment" })
+  -- stylua: ignore end
+end
