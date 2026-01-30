@@ -656,27 +656,6 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = true }, -- Disable italics in comments
-        },
-      }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-    end,
-  },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -764,7 +743,30 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   { import = 'custom.plugins' },
+  { import = 'custom.optional' },
+  {
+    -- You can easily change to a different colorscheme.
+    -- Change the name of the colorscheme plugin below, and then
+    -- change the command in the config to whatever the name of that colorscheme is.
+    --
+    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+    'folke/tokyonight.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('tokyonight').setup {
+        styles = {
+          comments = { italic = true }, -- Disable italics in comments
+        },
+      }
 
+      -- Load the colorscheme here.
+      -- Like many other themes, this one has different styles, and you could load
+      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      -- If Minimal is true, reset to default. Otherwise, use Tokyonight.
+      -- vim.cmd.colorscheme(Minimal and 'default' or 'tokyonight-night')
+    end,
+  },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -799,15 +801,16 @@ require 'custom.lsp'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-function leave_snippet()
-  if
-    ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
-    and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
-    and not require('luasnip').session.jump_active
-  then
-    require('luasnip').unlink_current()
-  end
-end
+--my changes
+-- function leave_snippet()
+--   if
+--     ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+--     and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+--     and not require('luasnip').session.jump_active
+--   then
+--     require('luasnip').unlink_current()
+--   end
+-- end
 
 -- this causes snippets tab to not work
 -- stop snippets when you leave to normal mode
@@ -819,7 +822,7 @@ vim.diagnostic.config { --my changes
   virtual_text = false,
   signs = true,
   underline = true,
-  float = { show_header = false, source = 'always' },
+  float = { show_header = false, source = true },
 }
 
 -- Show diagnostic popup only when cursor is on a line (after holding for a bit)
@@ -828,12 +831,6 @@ vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})
 vim.keymap.set('n', 'K', function()
   vim.lsp.buf.hover { border = 'rounded' }
 end, { noremap = true, silent = true }) --my changes
-
-vim.filetype.add {
-  extension = {
-    ['http'] = 'http',
-  },
-}
 
 vim.filetype.add {
   extension = {
@@ -858,49 +855,25 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
-vim.api.nvim_create_autocmd('BufEnter', {
-  callback = function()
-    vim.api.nvim_buf_attach(0, false, {
-      on_lines = function(lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits)
-        local args = { lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits }
-        -- Using 'vim.schedule' ensures the print happens
-        -- safely during the next event loop cycle
-        vim.schedule(function()
-          print('MODIFIED: ' .. vim.inspect(args))
+-- vim.api.nvim_create_autocmd('BufEnter', {
+--   callback = function()
+--     vim.api.nvim_buf_attach(0, false, {
+--       on_lines = function(lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits)
+--         local args = { lines, bufnr, changedtick, first, last_old, last_new, byte_count, deleted_codepoints, deleted_codeunits }
+--         -- Using 'vim.schedule' ensures the print happens
+--         -- safely during the next event loop cycle
+--         vim.schedule(function()
+--           print('MODIFIED: ' .. vim.inspect(args))
+--
+--           vim.api.nvim_open_win(0, false, { relative = 'win', row = 3, col = 3, width = 12, height = 3 })
+--
+--           -- vim.api.nvim_open_win(0, false, { relative = 'cursor', width = 10, height = 10, bufpos = { 100, 10 } })
+--         end)
+--       end,
+--     })
+--   end,
+-- })
 
-          vim.api.nvim_open_win(0, false, { relative = 'win', row = 3, col = 3, width = 12, height = 3 })
+vim.wo.fillchars = 'eob: '
 
-          -- vim.api.nvim_open_win(0, false, { relative = 'cursor', width = 10, height = 10, bufpos = { 100, 10 } })
-        end)
-      end,
-    })
-  end,
-})
-
-local minimal = true
-
-if minimal then
-  -- === Colorscheme ===
-  local palette = {
-    ['yellow'] = '#F6C177',
-    ['red'] = '#EB6F92',
-    ['blue'] = '#9CCFD8',
-    ['text_dark'] = '#777777',
-  }
-
-
--- stylua: ignore start
-vim.cmd.colorscheme("quiet")
-vim.api.nvim_set_hl(0, "Comment",     { fg = palette["text_dark"] })
-vim.api.nvim_set_hl(0, "String",      { fg = palette["yellow"]    })
-vim.api.nvim_set_hl(0, "Directory",   { fg = palette["blue"]      })
-vim.api.nvim_set_hl(0, "Visual",      { bg = "#333333",           })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#0A0A0A"            })
-vim.api.nvim_set_hl(0, "StatusLine",  { bg = "#111111"            })
-vim.api.nvim_set_hl(0, "StatusLine",  { bg = "#111111"            })
-vim.api.nvim_set_hl(0, "TODO",        { fg = palette["red"]       })
-vim.api.nvim_set_hl(0, "YankSystemClipboard", { bg = "#0000FF", fg = "#000000" })
-
-vim.api.nvim_set_hl(0, "rustCommentLineDoc",          { link = "Comment" })
-  -- stylua: ignore end
-end
+require 'custom.colorscheme'
