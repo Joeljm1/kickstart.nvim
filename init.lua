@@ -189,7 +189,8 @@ vim.o.expandtab = true --my changes
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic [Q]uickfix list' }) -- my changes
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -699,6 +700,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    -- branch = 'main',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
@@ -822,7 +824,7 @@ vim.diagnostic.config { --my changes
   virtual_text = false,
   signs = true,
   underline = true,
-  float = { show_header = false, source = true },
+  float = { source = true },
 }
 
 -- Show diagnostic popup only when cursor is on a line (after holding for a bit)
@@ -874,6 +876,5 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 --   end,
 -- })
 
-vim.wo.fillchars = 'eob: '
-
 require 'custom.colorscheme'
+require 'custom.testing'

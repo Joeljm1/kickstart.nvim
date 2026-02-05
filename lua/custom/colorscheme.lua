@@ -1,11 +1,13 @@
 Minimal = true
 ToggleTheme = function()
   Minimal = not Minimal
-  LoadTheme()
+  LoadTheme(Minimal)
 end
 
-LoadTheme = function()
-  if Minimal then
+--- @param minimal boolean
+LoadTheme = function(minimal)
+  Minimal = minimal
+  if minimal then
     -- === Colorscheme ===
     local palette = {
       ['yellow'] = '#F6C177',
@@ -29,10 +31,11 @@ LoadTheme = function()
   vim.api.nvim_set_hl(0, "YankSystemClipboard", { bg = "#0000FF", fg = "#000000" })
 
   vim.api.nvim_set_hl(0, "rustCommentLineDoc",          { link = "Comment" })
+  vim.wo.fillchars = 'eob: '
     -- stylua: ignore end
   else
     vim.cmd.colorscheme 'tokyonight-night'
   end
 end
 
-LoadTheme()
+LoadTheme(true)
