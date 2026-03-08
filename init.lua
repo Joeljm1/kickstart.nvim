@@ -189,8 +189,8 @@ vim.o.expandtab = true --my changes
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
--- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic [Q]uickfix list' }) -- my changes
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic [Q]uickfix list' }) -- my changes
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -546,7 +546,13 @@ require('lazy').setup({
         python = { 'black' },
         go = { 'goimports' },
         elixir = { 'elixir-ls' },
+        cpp = { 'clang-format' },
         -- my changes
+      },
+      formatters = {
+        ['clang-format'] = {
+          args = { '--style=google' },
+        },
       },
     },
   },
