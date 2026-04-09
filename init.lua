@@ -705,6 +705,8 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    lazy = false,
+    branch = 'master',
     build = ':TSUpdate',
     -- branch = 'main',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
@@ -851,6 +853,12 @@ vim.filetype.add {
 --   pattern = '*.pro',
 --   command = 'set filetype=prolog',
 -- })
+
+vim.filetype.add {
+  extension = {
+    inc = 'cpp',
+  },
+}
 
 -- Restore cursor to file position in previous editing session
 vim.api.nvim_create_autocmd('BufReadPost', {

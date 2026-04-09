@@ -7,40 +7,40 @@ return {
   -- my changes
   -- uncomment form using gruvbox
   --
-  -- {
-  --   {
-  --     'ellisonleao/gruvbox.nvim',
-  --     priority = 1000,
-  --     config = function()
-  --       -- Default options:
-  --       require('gruvbox').setup {
-  --         terminal_colors = true, -- add neovim terminal colors
-  --         undercurl = true,
-  --         underline = true,
-  --         bold = true,
-  --         italic = {
-  --           strings = true,
-  --           emphasis = true,
-  --           comments = true,
-  --           operators = false,
-  --           folds = true,
-  --         },
-  --         strikethrough = true,
-  --         invert_selection = false,
-  --         invert_signs = false,
-  --         invert_tabline = false,
-  --         inverse = true, -- invert background for search, diffs, statuslines and errors
-  --         contrast = '', -- can be "hard", "soft" or empty string
-  --         palette_overrides = {},
-  --         overrides = {},
-  --         dim_inactive = false,
-  --         transparent_mode = false,
-  --       }
-  --       vim.cmd 'colorscheme gruvbox'
-  --     end,
-  --     opts = ...,
-  --   },
-  -- },
+  {
+    {
+      'ellisonleao/gruvbox.nvim',
+      priority = 1000,
+      config = function()
+        -- Default options:
+        require('gruvbox').setup {
+          terminal_colors = true, -- add neovim terminal colors
+          undercurl = true,
+          underline = true,
+          bold = true,
+          italic = {
+            strings = true,
+            emphasis = true,
+            comments = true,
+            operators = false,
+            folds = true,
+          },
+          strikethrough = true,
+          invert_selection = false,
+          invert_signs = false,
+          invert_tabline = false,
+          inverse = true, -- invert background for search, diffs, statuslines and errors
+          contrast = '', -- can be "hard", "soft" or empty string
+          palette_overrides = {},
+          overrides = {},
+          dim_inactive = false,
+          transparent_mode = false,
+        }
+        vim.cmd 'colorscheme gruvbox'
+      end,
+      opts = ...,
+    },
+  },
 
   {
     'kdheepak/lazygit.nvim',
@@ -161,11 +161,11 @@ return {
   --     },
   --   },
   -- },
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
-  },
+  -- {
+  --   'pmizio/typescript-tools.nvim',
+  --   dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+  --   opts = {},
+  -- },
   {
     'mistweaverco/kulala.nvim',
     keys = {
@@ -195,7 +195,7 @@ return {
       -- add any options here
       cli = {
         mux = {
-          backend = 'zellij',
+          backend = 'tmux',
           enabled = false,
         },
       },
@@ -257,15 +257,15 @@ return {
 	  },
 	},
   },
-  {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
-  },
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  --   ---@module 'render-markdown'
+  --   ---@type render.md.UserConfig
+  --   opts = {},
+  -- },
   -- Amp Plugin
   {
     'sourcegraph/amp.nvim',
@@ -523,5 +523,10 @@ return {
       end
       require('r').setup(opts)
     end,
+  },
+  {
+    'WillEhrendreich/datastar.nvim',
+    ft = { 'html', 'templ' }, -- add "templ" if using the Templ Go templating language: ft = { "html", "templ" }
+    opts = {},
   },
 }

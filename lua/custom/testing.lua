@@ -1,13 +1,11 @@
 -- vim.api.nvim_open_win;
 
 ChangeTheme = function()
-  local options = { 'Minimal', 'Tokyo-night' }
-
   local height = vim.api.nvim_win_get_height(0)
   local width = vim.api.nvim_win_get_width(0)
   local buf = vim.api.nvim_create_buf(false, true)
 
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, options)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, Options)
   vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
   -- vim.api.nvim_set_option_value('readonly', true, { buf = buf })
 
@@ -31,15 +29,7 @@ ChangeTheme = function()
 
     -- 3. Do something with the choice
     print('You selected: ' .. choice)
-    if choice == options[1] then
-      LoadTheme(true)
-    else
-      LoadTheme(false)
-    end
-
-    if choice == 'Option A' then
-      -- Trigger specific logic for A
-    end
+    LoadTheme(choice)
   end, { buffer = buf, noremap = true, silent = true })
 
   -- vim.keymap.set('n', 'w', function()
@@ -77,16 +67,51 @@ end
 
 vim.keymap.set('n', '<leader>tt', ChangeTheme, { desc = 'Change theme' })
 
+local run_term = {
+  buf = nil,
+}
 Run = function()
+  if run_term.buf ~= nil and vim.api.nvim_buf_is_loaded(run_term.buf) then
+    local wins = vim.fn.win_findbuf(run_term.buf)
+    if #wins == 0 then
+      print 'buffer is hidden'
+      vim.cmd 'vnew'
+      vim.api.nvim_set_current_buf(run_term.buf)
+      run_term.buf = vim.api.nvim_get_current_buf()
+      run_term.win = vim.api.nvim_get_current_win()
+      return
+    end
+    print 'Loaded'
+    vim.api.nvim_win_hide(run_term.win)
+    -- vim.api.nvim_set_current_buf(run_term.buf)
+    return
+  end
+
+  local filename = vim.api.nvim_buf_get_name(0)
   -- Create a vertical split
   local ft = vim.bo.filetype
-  local name = vim.api.nvim_buf_get_name(0)
   vim.cmd 'vnew'
+  run_term.buf = vim.api.nvim_get_current_buf()
+  run_term.win = vim.api.nvim_get_current_win()
 
   -- Launch the terminal in the current (new) window
   if ft == 'python' then
-    vim.fn.jobstart(string.format('python %s', name), {
+    print(string.format('python %s', filename))
+    vim.fn.jobstart({ 'python', filename }, {
       term = true,
+      on_exit = function() --TODO: may be reuse the buffer instead??????
+        vim.schedule(function()
+          if run_term.win and vim.api.nvim_win_is_valid(run_term.win) then
+            vim.api.nvim_win_close(run_term.win, true)
+          end
+          if run_term.buf and vim.api.nvim_buf_is_valid(run_term.buf) then
+            vim.api.nvim_buf_delete(run_term.buf, { force = true })
+          end
+          run_term.buf = nil
+          run_term.win = nil
+          run_term.job = nil
+        end)
+      end,
     })
   else
     vim.fn.jobstart('make', {
@@ -95,6 +120,7 @@ Run = function()
   end
   -- Optional: Auto-scroll to the bottom as it runs
   vim.cmd 'startinsert'
+  vim.cmd 'stopinsert'
 end
 vim.keymap.set('n', '<leader>rr', Run, { desc = 'Run' })
 
