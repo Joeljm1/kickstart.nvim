@@ -9,11 +9,11 @@ return {
   --
   {
     {
-      'ellisonleao/gruvbox.nvim',
+      "ellisonleao/gruvbox.nvim",
       priority = 1000,
       config = function()
         -- Default options:
-        require('gruvbox').setup {
+        require("gruvbox").setup({
           terminal_colors = true, -- add neovim terminal colors
           undercurl = true,
           underline = true,
@@ -30,51 +30,51 @@ return {
           invert_signs = false,
           invert_tabline = false,
           inverse = true, -- invert background for search, diffs, statuslines and errors
-          contrast = '', -- can be "hard", "soft" or empty string
+          contrast = "", -- can be "hard", "soft" or empty string
           palette_overrides = {},
           overrides = {},
           dim_inactive = false,
           transparent_mode = false,
-        }
-        vim.cmd 'colorscheme gruvbox'
+        })
+        vim.cmd("colorscheme gruvbox")
       end,
       opts = ...,
     },
   },
 
   {
-    'kdheepak/lazygit.nvim',
+    "kdheepak/lazygit.nvim",
     lazy = true,
     cmd = {
-      'LazyGit',
-      'LazyGitConfig',
-      'LazyGitCurrentFile',
-      'LazyGitFilter',
-      'LazyGitFilterCurrentFile',
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
     },
     -- optional for floating window border decoration
     dependencies = {
-      'nvim-lua/plenary.nvim',
+      "nvim-lua/plenary.nvim",
     },
     -- setting the keybinding for LazyGit with 'keys' is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
-      { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
     },
   },
   {
-    'akinsho/toggleterm.nvim',
-    version = '*',
+    "akinsho/toggleterm.nvim",
+    version = "*",
     config = true,
   },
   {
-    'chentoast/marks.nvim',
-    event = 'VeryLazy',
+    "chentoast/marks.nvim",
+    event = "VeryLazy",
     opts = {},
   },
   {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
+    "folke/flash.nvim",
+    event = "VeryLazy",
     ---@type Flash.Config
     opts = {},
   -- stylua: ignore
@@ -167,18 +167,18 @@ return {
   --   opts = {},
   -- },
   {
-    'mistweaverco/kulala.nvim',
+    "mistweaverco/kulala.nvim",
     keys = {
-      { '<leader>Rs', desc = 'Send request' },
-      { '<leader>Ra', desc = 'Send all requests' },
-      { '<leader>Rb', desc = 'Open scratchpad' },
+      { "<leader>Rs", desc = "Send request" },
+      { "<leader>Ra", desc = "Send all requests" },
+      { "<leader>Rb", desc = "Open scratchpad" },
     },
-    ft = { 'http', 'rest' },
+    ft = { "http", "rest" },
     opts = {
       -- your configuration comes here
       global_keymaps = false,
-      global_keymaps_prefix = '<leader>R',
-      kulala_keymaps_prefix = '',
+      global_keymaps_prefix = "<leader>R",
+      kulala_keymaps_prefix = "",
     },
   },
   -- {
@@ -190,12 +190,12 @@ return {
   --   },
   -- },
   {
-    'folke/sidekick.nvim',
+    "folke/sidekick.nvim",
     opts = {
       -- add any options here
       cli = {
         mux = {
-          backend = 'tmux',
+          backend = "tmux",
           enabled = false,
         },
       },
@@ -257,34 +257,34 @@ return {
 	  },
 	},
   },
-  -- {
-  --   'MeanderingProgrammer/render-markdown.nvim',
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' }, -- if you use the mini.nvim suite
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-  --   ---@module 'render-markdown'
-  --   ---@type render.md.UserConfig
-  --   opts = {},
-  -- },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.nvim" }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
   -- Amp Plugin
   {
-    'sourcegraph/amp.nvim',
-    branch = 'main',
+    "sourcegraph/amp.nvim",
+    branch = "main",
     lazy = false,
-    opts = { auto_start = true, log_level = 'info' },
+    opts = { auto_start = true, log_level = "info" },
     {
-      'debugloop/telescope-undo.nvim',
+      "debugloop/telescope-undo.nvim",
       dependencies = { -- note how they're inverted to above example
         {
-          'nvim-telescope/telescope.nvim',
-          dependencies = { 'nvim-lua/plenary.nvim' },
+          "nvim-telescope/telescope.nvim",
+          dependencies = { "nvim-lua/plenary.nvim" },
         },
       },
       keys = {
         { -- lazy style key map
-          '<leader>u',
-          '<cmd>Telescope undo<cr>',
-          desc = 'undo history',
+          "<leader>u",
+          "<cmd>Telescope undo<cr>",
+          desc = "undo history",
         },
       },
       opts = {
@@ -300,33 +300,33 @@ return {
         -- Calling telescope's setup from multiple specs does not hurt, it will happily merge the
         -- configs for us. We won't use data, as everything is in it's own namespace (telescope
         -- defaults, as well as each extension).
-        require('telescope').setup(opts)
-        require('telescope').load_extension 'undo'
+        require("telescope").setup(opts)
+        require("telescope").load_extension("undo")
       end,
     },
   },
   {
-    'kawre/leetcode.nvim',
-    build = ':TSUpdate html', -- if you have `nvim-treesitter` installed
+    "kawre/leetcode.nvim",
+    build = ":TSUpdate html", -- if you have `nvim-treesitter` installed
     dependencies = {
       -- include a picker of your choice, see picker section for more details
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
       {
-        '3rd/image.nvim',
+        "3rd/image.nvim",
         build = false, -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
         opts = {
-          processor = 'magick_cli',
+          processor = "magick_cli",
         },
       },
     },
     opts = {
       -- configuration goes here
       ---@type string
-      arg = 'leetcode.nvim',
+      arg = "leetcode.nvim",
 
       ---@type lc.lang
-      lang = 'cpp',
+      lang = "cpp",
 
       cn = { -- leetcode.cn
         enabled = false, ---@type boolean
@@ -336,8 +336,8 @@ return {
 
       ---@type lc.storage
       storage = {
-        home = vim.fn.stdpath 'data' .. '/leetcode',
-        cache = vim.fn.stdpath 'cache' .. '/leetcode',
+        home = vim.fn.stdpath("data") .. "/leetcode",
+        cache = vim.fn.stdpath("cache") .. "/leetcode",
       },
 
       ---@type table<string, boolean>
@@ -362,28 +362,28 @@ return {
       console = {
         open_on_runcode = true, ---@type boolean
 
-        dir = 'row', ---@type lc.direction
+        dir = "row", ---@type lc.direction
 
         size = { ---@type lc.size
-          width = '90%',
-          height = '75%',
+          width = "90%",
+          height = "75%",
         },
 
         result = {
-          size = '60%', ---@type lc.size
+          size = "60%", ---@type lc.size
         },
 
         testcase = {
           virt_text = true, ---@type boolean
 
-          size = '40%', ---@type lc.size
+          size = "40%", ---@type lc.size
         },
       },
 
       description = {
-        position = 'left', ---@type lc.position
+        position = "left", ---@type lc.position
 
-        width = '40%', ---@type lc.size
+        width = "40%", ---@type lc.size
 
         show_stats = true, ---@type boolean
       },
@@ -393,23 +393,23 @@ return {
 
       hooks = {
         ---@type fun()[]
-        ['enter'] = {},
+        ["enter"] = {},
 
         ---@type fun(question: lc.ui.Question)[]
-        ['question_enter'] = {},
+        ["question_enter"] = {},
 
         ---@type fun()[]
-        ['leave'] = {},
+        ["leave"] = {},
       },
 
       keys = {
-        toggle = { 'q' }, ---@type string|string[]
-        confirm = { '<CR>' }, ---@type string|string[]
+        toggle = { "q" }, ---@type string|string[]
+        confirm = { "<CR>" }, ---@type string|string[]
 
-        reset_testcases = 'r', ---@type string
-        use_testcase = 'U', ---@type string
-        focus_testcases = 'H', ---@type string
-        focus_result = 'L', ---@type string
+        reset_testcases = "r", ---@type string
+        use_testcase = "U", ---@type string
+        focus_testcases = "H", ---@type string
+        focus_result = "L", ---@type string
       },
 
       ---@type lc.highlights
@@ -420,53 +420,53 @@ return {
     },
   },
   {
-    'mikesmithgh/kitty-scrollback.nvim',
+    "mikesmithgh/kitty-scrollback.nvim",
     enabled = true,
     lazy = true,
     cmd = {
-      'KittyScrollbackGenerateKittens',
-      'KittyScrollbackCheckHealth',
-      'KittyScrollbackGenerateCommandLineEditing',
+      "KittyScrollbackGenerateKittens",
+      "KittyScrollbackCheckHealth",
+      "KittyScrollbackGenerateCommandLineEditing",
     },
-    event = { 'User KittyScrollbackLaunch' },
+    event = { "User KittyScrollbackLaunch" },
     -- version = '*', -- latest stable version, may have breaking changes if major version changed
     -- version = '^6.0.0', -- pin major version, include fixes and features that do not have breaking changes
     config = function()
-      require('kitty-scrollback').setup()
+      require("kitty-scrollback").setup()
     end,
   },
   {
-    'mikavilpas/yazi.nvim',
-    version = '*', -- use the latest stable version
-    event = 'VeryLazy',
+    "mikavilpas/yazi.nvim",
+    version = "*", -- use the latest stable version
+    event = "VeryLazy",
     dependencies = {
-      { 'nvim-lua/plenary.nvim', lazy = true },
+      { "nvim-lua/plenary.nvim", lazy = true },
     },
     keys = {
       -- 👇 in this section, choose your own keymappings!
       {
-        '<leader>-',
-        mode = { 'n', 'v' },
-        '<cmd>Yazi<cr>',
-        desc = 'Open yazi at the current file',
+        "<leader>-",
+        mode = { "n", "v" },
+        "<cmd>Yazi<cr>",
+        desc = "Open yazi at the current file",
       },
       {
         -- Open in the current working directory
-        '<leader>cw',
-        '<cmd>Yazi cwd<cr>',
+        "<leader>cw",
+        "<cmd>Yazi cwd<cr>",
         desc = "Open the file manager in nvim's working directory",
       },
       {
-        '<c-up>',
-        '<cmd>Yazi toggle<cr>',
-        desc = 'Resume the last yazi session',
+        "<c-up>",
+        "<cmd>Yazi toggle<cr>",
+        desc = "Resume the last yazi session",
       },
     },
     opts = {
       -- if you want to open yazi instead of netrw, see below for more info
       open_for_directories = false,
       keymaps = {
-        show_help = '<f1>',
+        show_help = "<f1>",
       },
     },
     -- 👇 if you use `open_for_directories=true`, this is recommended
@@ -478,7 +478,7 @@ return {
     end,
   },
   {
-    'R-nvim/R.nvim',
+    "R-nvim/R.nvim",
     -- Only required if you also set defaults.lazy = true
     lazy = false,
     -- R.nvim is still young and we may make some breaking changes from time
@@ -492,41 +492,41 @@ return {
       local opts = {
         hook = {
           on_filetype = function()
-            vim.api.nvim_buf_set_keymap(0, 'n', '<Enter>', '<Plug>RDSendLine', {})
-            vim.api.nvim_buf_set_keymap(0, 'v', '<Enter>', '<Plug>RSendSelection', {})
+            vim.api.nvim_buf_set_keymap(0, "n", "<Enter>", "<Plug>RDSendLine", {})
+            vim.api.nvim_buf_set_keymap(0, "v", "<Enter>", "<Plug>RSendSelection", {})
           end,
         },
-        R_args = { '--quiet', '--no-save' },
+        R_args = { "--quiet", "--no-save" },
         min_editor_width = 72,
         rconsole_width = 78,
         objbr_mappings = { -- Object browser keymap
-          c = 'class', -- Call R functions
-          ['<localleader>gg'] = 'head({object}, n = 15)', -- Use {object} notation to write arbitrary R code.
+          c = "class", -- Call R functions
+          ["<localleader>gg"] = "head({object}, n = 15)", -- Use {object} notation to write arbitrary R code.
           v = function()
             -- Run lua functions
-            require('r.browser').toggle_view()
+            require("r.browser").toggle_view()
           end,
         },
         disable_cmds = {
-          'RClearConsole',
-          'RCustomStart',
-          'RSPlot',
-          'RSaveClose',
+          "RClearConsole",
+          "RCustomStart",
+          "RSPlot",
+          "RSaveClose",
         },
       }
       -- Check if the environment variable "R_AUTO_START" exists.
       -- If using fish shell, you could put in your config.fish:
       -- alias r "R_AUTO_START=true nvim"
-      if vim.env.R_AUTO_START == 'true' then
-        opts.auto_start = 'on startup'
+      if vim.env.R_AUTO_START == "true" then
+        opts.auto_start = "on startup"
         opts.objbr_auto_start = true
       end
-      require('r').setup(opts)
+      require("r").setup(opts)
     end,
   },
   {
-    'WillEhrendreich/datastar.nvim',
-    ft = { 'html', 'templ' }, -- add "templ" if using the Templ Go templating language: ft = { "html", "templ" }
+    "WillEhrendreich/datastar.nvim",
+    ft = { "html", "templ" }, -- add "templ" if using the Templ Go templating language: ft = { "html", "templ" }
     opts = {},
   },
 }

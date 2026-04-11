@@ -1,23 +1,23 @@
-Options = { 'Minimal', 'Default', 'Tokyo-night', 'Gruvbox - dark', 'Gruvbox - light' }
+Options = { "Minimal", "Default", "Tokyo-night", "Gruvbox - dark", "Gruvbox - light" }
 SelectedColor = Options[1] -- minimal
 
 --- @param opt string
 LoadTheme = function(opt)
   SelectedColor = opt
   if opt == Options[5] then
-    vim.o.background = 'light'
+    vim.o.background = "light"
   else
-    vim.o.background = 'dark'
+    vim.o.background = "dark"
   end
 
   if opt == Options[1] then
     -- === Colorscheme ===
     local palette = {
-      ['yellow'] = '#F6C177',
+      ["yellow"] = "#F6C177",
       -- ['red'] = '#EB6F92',
-      ['red'] = '#FF0000',
-      ['blue'] = '#9CCFD8',
-      ['text_dark'] = '#777777',
+      ["red"] = "#FF0000",
+      ["blue"] = "#9CCFD8",
+      ["text_dark"] = "#777777",
     }
 
 
@@ -39,13 +39,13 @@ LoadTheme = function(opt)
   vim.wo.fillchars = 'eob: '
     -- stylua: ignore end
   elseif opt == Options[2] then
-    vim.cmd.colorscheme 'default'
+    vim.cmd.colorscheme("default")
   elseif opt == Options[3] then
-    vim.cmd.colorscheme 'tokyonight-night'
+    vim.cmd.colorscheme("tokyonight-night")
   elseif opt == Options[4] then
-    vim.cmd.colorscheme 'gruvbox'
+    vim.cmd.colorscheme("gruvbox")
   elseif opt == Options[5] then
-    vim.cmd.colorscheme 'gruvbox'
+    vim.cmd.colorscheme("gruvbox")
   end
 end
 
