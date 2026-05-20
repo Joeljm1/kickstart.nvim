@@ -5,6 +5,7 @@
 local lang = {
   "bash",
   "c",
+  "cpp",
   "diff",
   "html",
   "lua",
@@ -19,6 +20,12 @@ local lang = {
   "elixir",
   "heex",
   "http",
+  "svelte",
+  "haskell",
+  "llvm",
+  "ocaml",
+  "glsl",
+  "templ",
 }
 
 require("nvim-treesitter").install(lang)

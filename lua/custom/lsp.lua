@@ -5,6 +5,14 @@ vim.lsp.config("racket_langserver", {
   filetypes = { "racket", "scheme" },
   root_ = { ".git" },
 })
+
+vim.lsp.config("html", {
+  filetypes = {
+    "html",
+    "templ",
+  },
+})
+
 vim.lsp.enable("racket_langserver")
 vim.lsp.enable("templ")
 vim.lsp.enable("gleam")

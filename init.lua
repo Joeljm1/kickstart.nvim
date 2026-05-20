@@ -222,6 +222,7 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 vim.keymap.set("n", "<A-j>", "<cmd>cnext<CR>", { desc = "next in quicklist" })
 vim.keymap.set("n", "<A-k>", "<cmd>cprev<CR>", { desc = "prev in quicklist" })
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
+--
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
@@ -811,7 +812,6 @@ require("lazy").setup({
   },
 })
 
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 -- load lsp details from ./lua/custom/lsp.lua
 require("custom.lsp")
 require("custom.treesitter")
@@ -850,12 +850,6 @@ vim.keymap.set("n", "K", function()
   vim.lsp.buf.hover({ border = "rounded" })
 end, { noremap = true, silent = true }) --my changes
 
-vim.filetype.add({
-  extension = {
-    ["http"] = "http",
-  },
-})
-
 -- enable prolog in tree sitter
 -- vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 --   pattern = '*.pro',
@@ -865,6 +859,7 @@ vim.filetype.add({
 vim.filetype.add({
   extension = {
     inc = "cpp",
+    ["http"] = "http",
   },
 })
 
@@ -900,6 +895,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 require("custom.colorscheme")
 require("custom.testing")
+require("custom.misc")
 
 --NOTE: TESTING method
 -- vim.schedule(function()

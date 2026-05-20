@@ -67,21 +67,44 @@ end
 
 vim.keymap.set("n", "<leader>tt", ChangeTheme, { desc = "Change theme" })
 
+---@class buffWin
+---@field buf integer|nil
+---@field win integer|nil
+
+---@type buffWin
 local run_term = {
   buf = nil,
+  win = nil,
 }
+
+---@param buffWin buffWin
+local deleteBufWin = function(buffWin)
+  return function() --TODO: may be reuse the buffer instead??????
+    vim.schedule(function()
+      if buffWin.win and vim.api.nvim_win_is_valid(buffWin.win) then
+        vim.api.nvim_win_close(buffWin.win, true)
+      end
+      if buffWin.buf and vim.api.nvim_buf_is_valid(buffWin.buf) then
+        vim.api.nvim_buf_delete(buffWin.buf, { force = true })
+      end
+      buffWin.buf = nil
+      buffWin.win = nil
+      -- buffWin.job = nil
+    end)
+  end
+end
+
 Run = function()
   if run_term.buf ~= nil and vim.api.nvim_buf_is_loaded(run_term.buf) then
     local wins = vim.fn.win_findbuf(run_term.buf)
     if #wins == 0 then
-      print("buffer is hidden")
-      vim.cmd("vnew")
+      print("buffer was hidden")
+      vim.cmd("vsplit")
       vim.api.nvim_set_current_buf(run_term.buf)
       run_term.buf = vim.api.nvim_get_current_buf()
       run_term.win = vim.api.nvim_get_current_win()
       return
     end
-    print("Loaded")
     vim.api.nvim_win_hide(run_term.win)
     -- vim.api.nvim_set_current_buf(run_term.buf)
     return
@@ -99,23 +122,17 @@ Run = function()
     print(string.format("python %s", filename))
     vim.fn.jobstart({ "python", filename }, {
       term = true,
-      on_exit = function() --TODO: may be reuse the buffer instead??????
-        vim.schedule(function()
-          if run_term.win and vim.api.nvim_win_is_valid(run_term.win) then
-            vim.api.nvim_win_close(run_term.win, true)
-          end
-          if run_term.buf and vim.api.nvim_buf_is_valid(run_term.buf) then
-            vim.api.nvim_buf_delete(run_term.buf, { force = true })
-          end
-          run_term.buf = nil
-          run_term.win = nil
-          run_term.job = nil
-        end)
+
+      on_exit = function()
+        deleteBufWin(run_term)
       end,
     })
   else
     vim.fn.jobstart("make", {
       term = true,
+      on_exit = function()
+        deleteBufWin(run_term)
+      end,
     })
   end
   -- Optional: Auto-scroll to the bottom as it runs
@@ -124,20 +141,61 @@ Run = function()
 end
 vim.keymap.set("n", "<leader>rr", Run, { desc = "Run" })
 
-RunCustom = function()
+---@type buffWin
+local run_custom_term = {
+  buf = nil,
+  win = nil,
+}
+
+local custom_percentage = 0.4 --40%
+
+---@param cmd string|nil
+RunCustom = function(cmd)
+  -- check if already window exists
+  if run_custom_term.buf ~= nil and vim.api.nvim_buf_is_loaded(run_custom_term.buf) then
+    local wins = vim.fn.win_findbuf(run_custom_term.buf)
+
+    -- buffer is hidden
+    if #wins == 0 then
+      vim.cmd("vsplit")
+      vim.cmd("vertical resize " .. math.floor(vim.o.columns * custom_percentage))
+      vim.api.nvim_set_current_buf(run_custom_term.buf)
+      -- run_custom_term.buf = vim.api.nvim_get_current_buf()
+      run_custom_term.win = vim.api.nvim_get_current_win()
+      vim.cmd("startinsert")
+      return
+    end
+
+    -- hide buffer
+    vim.api.nvim_win_hide(run_custom_term.win)
+    return
+  end
+
+  if cmd == nil then
+    cmd = vim.fn.input("Enter what to run: ")
+  end
+
   -- Create a vertical split
   vim.cmd("vnew")
-
-  local cmd = vim.fn.input("Enter what to run: ")
+  vim.cmd("vertical resize " .. math.floor(vim.o.columns * custom_percentage))
+  run_custom_term.buf = vim.api.nvim_get_current_buf()
+  run_custom_term.win = vim.api.nvim_get_current_win()
 
   -- Launch the terminal in the current (new) window
   vim.fn.jobstart(cmd, {
     term = true,
+    on_exit = function()
+      deleteBufWin(run_custom_term)
+    end,
   })
   -- Optional: Auto-scroll to the bottom as it runs
   vim.cmd("startinsert")
 end
 
+function RunShell()
+  RunCustom("fish")
+end
+vim.keymap.set({ "n", "i", "t" }, "<C-\\>", RunShell, { desc = "Run shell (fish)" })
 vim.keymap.set("n", "<leader>rc", RunCustom, { desc = "Run Custom" })
 
 function ReadDir()
