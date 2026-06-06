@@ -196,7 +196,15 @@ return {
       cli = {
         mux = {
           backend = "tmux",
-          enabled = false,
+          enabled = true,
+        },
+
+        tools = {
+          antigravity = {
+            cmd = { "agy" },
+            -- Optional: custom keymaps for this tool
+            keys = {},
+          },
         },
       },
     },
@@ -500,5 +508,8 @@ return {
       "SplitAsmToggleSync",
     },
     opts = {},
+  },
+  {
+    "github/copilot.vim",
   },
 }
