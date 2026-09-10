@@ -26,6 +26,7 @@ local lang = {
   "ocaml",
   "glsl",
   "templ",
+  "xml",
 }
 
 require("nvim-treesitter").install(lang)

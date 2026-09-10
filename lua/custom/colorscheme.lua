@@ -1,25 +1,14 @@
 Options = { "Minimal", "Default", "Tokyo-night", "Gruvbox - dark", "Gruvbox - light" }
 SelectedColor = Options[1] -- minimal
 
---- @param opt string
-LoadTheme = function(opt)
-  SelectedColor = opt
-  if opt == Options[5] then
-    vim.o.background = "light"
-  else
-    vim.o.background = "dark"
-  end
-
-  if opt == Options[1] then
-    -- === Colorscheme ===
-    local palette = {
-      ["yellow"] = "#F6C177",
-      -- ['red'] = '#EB6F92',
-      ["red"] = "#FF0000",
-      ["blue"] = "#9CCFD8",
-      ["text_dark"] = "#777777",
-    }
-
+Mycolor = function()
+  local palette = {
+    ["yellow"] = "#F6C177",
+    -- ['red'] = '#EB6F92',
+    ["red"] = "#FF0000",
+    ["blue"] = "#9CCFD8",
+    ["text_dark"] = "#777777",
+  }
 
   -- stylua: ignore start
   vim.cmd.colorscheme("quiet")
@@ -35,8 +24,27 @@ LoadTheme = function(opt)
   vim.api.nvim_set_hl(0, "TODO",        { fg = palette["red"]       })
   vim.api.nvim_set_hl(0, "YankSystemClipboard", { bg = "#0000FF", fg = "#000000" })
 
+  --RendeerMarkdown
+  vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#000000", fg = palette["red"] })
+
+  -- Neogit
+
   vim.api.nvim_set_hl(0, "rustCommentLineDoc",          { link = "Comment" })
   vim.wo.fillchars = 'eob: '
+end
+
+--- @param opt string
+LoadTheme = function(opt)
+  SelectedColor = opt
+  if opt == Options[5] then
+    vim.o.background = "light"
+  else
+    vim.o.background = "dark"
+  end
+
+  if opt == Options[1] then
+    -- === Colorscheme ===
+    Mycolor()
     -- stylua: ignore end
   elseif opt == Options[2] then
     vim.cmd.colorscheme("default")
