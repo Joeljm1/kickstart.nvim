@@ -106,14 +106,14 @@ return {
       kulala_keymaps_prefix = "",
     },
   },
-  {
-    "olimorris/codecompanion.nvim",
-    opts = {},
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
+  -- {
+  --   "olimorris/codecompanion.nvim",
+  --   opts = {},
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  -- },
   {
     "folke/sidekick.nvim",
     opts = {
@@ -458,6 +458,7 @@ return {
         diffview = true,
         fzf_lua = true,
       },
+      graph_style = "kitty",
       diff_viewer = "diffview",
     },
   },
