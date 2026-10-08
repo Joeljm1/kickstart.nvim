@@ -17,5 +17,7 @@ vim.lsp.enable("racket_langserver")
 vim.lsp.enable("templ")
 vim.lsp.enable("gleam")
 vim.lsp.enable("hls")
+
+vim.lsp.enable("metals")
 -- https://www.youtube.com/watch?v=oBiBEx7L000
 --h lspconfig-all

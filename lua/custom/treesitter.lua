@@ -27,6 +27,10 @@ local lang = {
   "glsl",
   "templ",
   "xml",
+  "scala",
+  "cmake",
+  "latex",
+  "yaml",
 }
 
 require("nvim-treesitter").install(lang)
